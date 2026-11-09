@@ -13,6 +13,7 @@ export class SoundEngine {
     this.noise = null;
     this._lastPress = null;
     this._lastPressAt = 0;
+    this.enabled = true;
   }
 
   _init() {
@@ -58,7 +59,7 @@ export class SoundEngine {
   }
 
   get ready() {
-    return !!this.ctx && this.ctx.state === 'running';
+    return this.enabled && !!this.ctx && this.ctx.state === 'running';
   }
 
   _voice(level = 1) {
@@ -132,6 +133,15 @@ export class SoundEngine {
     const out = this._voice(0.55);
     this._noiseBurst(out, t, { freq: 4200, q: 1.2, gain: 0.3, decay: 0.012 });
     this._tone(out, t, { from: 240, to: 150, glide: 0.02, gain: 0.18, decay: 0.03 });
+  }
+
+  /** Light tick for menus and switches. */
+  tick() {
+    if (!this.ready) return;
+    const t = this.ctx.currentTime + 0.001;
+    const out = this._voice(0.4);
+    this._noiseBurst(out, t, { freq: 3400, q: 1.1, gain: 0.35, decay: 0.012 });
+    this._tone(out, t, { from: 320, to: 200, glide: 0.02, gain: 0.25, decay: 0.03 });
   }
 
   /** Small warm two-note confirmation, quiet enough to sit under the click. */

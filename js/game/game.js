@@ -14,7 +14,8 @@ import { createRound } from './rounds.js';
 const RESTART_LOCK_MS = 1000;
 
 export class Game {
-  constructor({ view, sound, haptics, score, caption }) {
+  constructor({ view, sound, haptics, score, caption, onState }) {
+    this.onState = onState;
     this.view = view;
     this.sound = sound;
     this.haptics = haptics;
@@ -27,6 +28,19 @@ export class Game {
     this.state = 'idle';
     this.restartAt = 0;
     this.showIdle();
+  }
+
+  get state() { return this._state; }
+
+  set state(value) {
+    if (this._state === value) return;
+    this._state = value;
+    this.onState?.(value);
+  }
+
+  /** Playing, or about to: menus stay out of the way. */
+  get busy() {
+    return this._state === 'intro' || this._state === 'playing' || this._state === 'dying';
   }
 
   /* ---------- input ---------- */

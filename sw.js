@@ -1,5 +1,5 @@
 // Cache-first service worker: PUSH works fully offline once installed.
-const CACHE = 'push-v2';
+const CACHE = 'push-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ const ASSETS = [
   './css/style.css',
   './js/main.js',
   './js/ui/button.js',
+  './js/ui/menus.js',
+  './js/core/settings.js',
   './js/audio/sound.js',
   './js/core/haptics.js',
   './js/core/input.js',

@@ -7,9 +7,11 @@ export class Haptics {
   constructor(label) {
     this.label = label;
     this.canVibrate = typeof navigator.vibrate === 'function';
+    this.enabled = true;
   }
 
   tick() {
+    if (!this.enabled) return;
     if (this.canVibrate) {
       navigator.vibrate(8);
       return;
@@ -18,6 +20,7 @@ export class Haptics {
   }
 
   error() {
+    if (!this.enabled) return;
     if (this.canVibrate) {
       navigator.vibrate([30, 40, 60]);
       return;

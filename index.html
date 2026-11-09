@@ -45,6 +45,39 @@
     </div>
   </main>
 
+  <!-- Corner menus: paper buttons that unfold into a panel -->
+  <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+  <button class="corner corner--left" id="scoresBtn" type="button" aria-label="High scores" aria-expanded="false" aria-controls="scoresPanel">
+    <span class="corner__disc">
+      <svg class="corner__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3.2 L20.6 11.4 H17.6 V19.8 H13.9 V15.4 H10.1 V19.8 H6.4 V11.4 H3.4 Z"/>
+      </svg>
+    </span>
+  </button>
+  <section class="panel panel--left" id="scoresPanel" aria-label="High scores" inert>
+    <h2 class="panel__title">HIGH SCORES</h2>
+    <ol class="scores" id="scoresList"></ol>
+    <p class="panel__empty" id="scoresEmpty">No scores yet.<br>Press PUSH to set one.</p>
+  </section>
+
+  <button class="corner corner--right" id="settingsBtn" type="button" aria-label="Settings" aria-expanded="false" aria-controls="settingsPanel">
+    <span class="corner__disc">
+      <svg class="corner__icon corner__icon--gear" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill-rule="evenodd" d="M19.32 9.97 L22.05 10.27 L22.05 13.73 L19.32 14.03 L18.61 15.75 L20.33 17.89 L17.89 20.33 L15.75 18.61 L14.03 19.32 L13.73 22.05 L10.27 22.05 L9.97 19.32 L8.25 18.61 L6.11 20.33 L3.67 17.89 L5.39 15.75 L4.68 14.03 L1.95 13.73 L1.95 10.27 L4.68 9.97 L5.39 8.25 L3.67 6.11 L6.11 3.67 L8.25 5.39 L9.97 4.68 L10.27 1.95 L13.73 1.95 L14.03 4.68 L15.75 5.39 L17.89 3.67 L20.33 6.11 L18.61 8.25Z M12 8.4 A3.6 3.6 0 1 0 12 15.6 A3.6 3.6 0 1 0 12 8.4Z"/>
+      </svg>
+    </span>
+  </button>
+  <section class="panel panel--right" id="settingsPanel" aria-label="Settings" inert>
+    <h2 class="panel__title">SETTINGS</h2>
+    <div class="opts">
+      <div class="opt"><span class="opt__label" id="lblSound">SOUND</span><button class="switch" type="button" role="switch" aria-labelledby="lblSound" data-setting="sound"><i></i></button></div>
+      <div class="opt"><span class="opt__label" id="lblHaptics">VIBRATION</span><button class="switch" type="button" role="switch" aria-labelledby="lblHaptics" data-setting="haptics"><i></i></button></div>
+      <div class="opt"><span class="opt__label" id="lblDark">DARK MODE</span><button class="switch" type="button" role="switch" aria-labelledby="lblDark" data-setting="dark"><i></i></button></div>
+    </div>
+    <button class="panel__action" id="clearScores" type="button">CLEAR HIGH SCORES</button>
+  </section>
+
   <!-- iOS 18+ haptic tick: toggling a native switch triggers the Taptic Engine -->
   <label class="haptic" id="hapticLabel" aria-hidden="true"><input type="checkbox" switch tabindex="-1"></label>
 
