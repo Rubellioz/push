@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PUSH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#e5e5e3">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="One button. Follow the instruction. Don't miss.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PUSH">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="stage" id="stage">
+    <div class="device" id="device">
+      <div class="halo" aria-hidden="true"></div>
+
+      <svg class="timer" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="timer__track" cx="50" cy="50" r="47"></circle>
+        <circle class="timer__bar" id="timerBar" cx="50" cy="50" r="47" pathLength="100"></circle>
+      </svg>
+
+      <button class="push" id="push" type="button" aria-label="PUSH">
+        <span class="push__glow push__glow--warm" aria-hidden="true"></span>
+        <span class="push__glow push__glow--good" aria-hidden="true"></span>
+        <span class="push__glow push__glow--bad" aria-hidden="true"></span>
+        <span class="push__rim" aria-hidden="true"></span>
+        <span class="push__face">
+          <span class="face__top" id="faceTop"></span>
+          <span class="face__main" id="faceMain">PUSH</span>
+          <span class="face__sub" id="faceSub"></span>
+          <span class="face__dots" id="faceDots" aria-hidden="true"></span>
+        </span>
+      </button>
+
+      <p class="caption" id="caption" aria-live="polite"></p>
+    </div>
+  </main>
+
+  <!-- iOS 18+ haptic tick: toggling a native switch triggers the Taptic Engine -->
+  <label class="haptic" id="hapticLabel" aria-hidden="true"><input type="checkbox" switch tabindex="-1"></label>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
