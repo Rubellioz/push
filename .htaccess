@@ -1,0 +1,10 @@
+# Always revalidate app files so a new deploy is picked up immediately.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|css|webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <Files "sw.js">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </Files>
+</IfModule>
+AddType application/manifest+json .webmanifest

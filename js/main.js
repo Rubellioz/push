@@ -1,11 +1,11 @@
-import { ButtonView } from './ui/button.js';
-import { Menus } from './ui/menus.js';
-import { SoundEngine } from './audio/sound.js';
-import { Haptics } from './core/haptics.js';
-import { InputController } from './core/input.js';
-import { Settings } from './core/settings.js';
-import { Score } from './game/score.js';
-import { Game } from './game/game.js';
+import { ButtonView } from './ui/button.js?v=4';
+import { Menus } from './ui/menus.js?v=4';
+import { SoundEngine } from './audio/sound.js?v=4';
+import { Haptics } from './core/haptics.js?v=4';
+import { InputController } from './core/input.js?v=4';
+import { Settings } from './core/settings.js?v=4';
+import { Score } from './game/score.js?v=4';
+import { Game } from './game/game.js?v=4';
 
 const settings = new Settings();
 const view = new ButtonView(document);
@@ -76,8 +76,19 @@ window.addEventListener('pagehide', () => game.interrupt());
 
 // Offline / installable. Skipped silently where service workers aren't allowed.
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  // When a new version takes over, reload once so every file is from the same deploy.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloaded || game.busy) return;
+    reloaded = true;
+    location.reload();
+  });
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker
+      .register('sw.js', { updateViaCache: 'none' })
+      .then((reg) => reg.update())
+      .catch(() => {});
   });
 }
 

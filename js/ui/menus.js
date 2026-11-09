@@ -4,6 +4,23 @@
  *   right: settings (sound, vibration, dark mode, clear scores)
  * Only one panel is open at a time; tapping outside closes it.
  */
+/**
+ * Fires fn once per tap: on pointerup for touch (instant and reliable on
+ * iOS), with click kept as fallback for keyboard and older browsers.
+ */
+function onTap(el, fn) {
+  let lastPointer = 0;
+  el.addEventListener('pointerup', (e) => {
+    if (e.button > 0) return;
+    lastPointer = performance.now();
+    fn(e);
+  });
+  el.addEventListener('click', (e) => {
+    if (performance.now() - lastPointer < 700) return;
+    fn(e);
+  });
+}
+
 export class Menus {
   constructor({ settings, score, sound, haptics }) {
     this.settings = settings;
@@ -28,7 +45,7 @@ export class Menus {
 
   _bind() {
     for (const [name, { btn }] of Object.entries(this.menus)) {
-      btn.addEventListener('click', () => {
+      onTap(btn, () => {
         this._feedback();
         this.toggle(name);
       });
@@ -42,14 +59,16 @@ export class Menus {
     });
 
     this.switches.forEach((sw) => {
-      sw.addEventListener('click', () => {
+      onTap(sw, () => {
         this.settings.toggle(sw.dataset.setting);
         this._feedback();
       });
     });
     this.settings.onChange(() => this._syncSwitches());
 
-    this.clearBtn.addEventListener('click', () => this._clearScores());
+    onTap(this.clearBtn, () => {
+      if (!this.clearBtn.disabled) this._clearScores();
+    });
   }
 
   toggle(name) {
