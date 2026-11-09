@@ -1,29 +1,55 @@
 /* PUSH — one physical button, embedded in a soft grey wall.
-   Layer stack (bottom → top): wall, halo, timer ring, glow, rim, face. */
+   Layer stack (bottom → top): wall, halo, timer ring, glow, rim, face.
+   Light model (from the reference): a warm lamp sits *behind* the disc and
+   leaks out along the left and bottom edge; a cool key light from the top
+   right puts a crisp white highlight on the upper rim and shows the disc's
+   grey thickness at the bottom right. */
+
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/montserrat-latin-300-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/montserrat-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/montserrat-latin-500-normal.woff2") format("woff2");
+}
+
 :root {
-  --wall-hi: #efefed;
-  --wall: #e5e5e3;
-  --wall-lo: #d8d8d6;
-  --face-hi: #fafaf9;
-  --face: #f1f1ef;
-  --face-lo: #e7e7e5;
-  --rim-hi: #d9d9d7;
-  --rim-lo: #b9b9b7;
-  --ink: #2b2b2a;
-  --ink-soft: #8d8d8a;
-  --amber-hi: #ffd987;
-  --amber: #ffb547;
-  --amber-lo: #ff9419;
+  --wall-hi: #e6e6e5;
+  --wall: #e0e0df;
+  --wall-lo: #d6d6d5;
+  --face-hi: #f1f1f0;
+  --face: #ebebea;
+  --face-lo: #e4e4e3;
+  --rim-hi: #cfcfcd;
+  --rim-lo: #a9a9a7;
+  --ink: #3a3936;
+  --ink-soft: #8f8e8a;
+  --amber-hi: #ffe08f;
+  --amber: #ffbf45;
+  --amber-lo: #f9a01e;
   --good: #8fe3a8;
   --good-lo: #43c070;
   --bad: #ff7a6b;
   --bad-lo: #f0302a;
 
   --B: min(78vw, 330px);
-  --press: 0;          /* 0 → 1 while pressed */
   --ease-press: cubic-bezier(.3, .0, .2, 1);
   --ease-release: cubic-bezier(.25, 1.55, .45, 1);
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+  --font: "Montserrat", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
   color-scheme: light;
 }
 @supports (height: 1dvh) {
@@ -52,7 +78,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
   background:
-    radial-gradient(120% 80% at 50% 42%, var(--wall-hi) 0%, var(--wall) 55%, var(--wall-lo) 100%);
+    radial-gradient(130% 90% at 50% 45%, var(--wall-hi) 0%, var(--wall) 50%, var(--wall-lo) 100%);
 }
 
 .stage {
@@ -75,28 +101,28 @@ body {
   transform: translateY(4dvh);
 }
 
-/* ---------- Halo: the shallow recess the button sits in ---------- */
+/* ---------- Halo: a faint translucent disc, lit warm from inside ---------- */
 .halo {
   position: absolute;
-  inset: calc(var(--B) * -0.17);
+  inset: calc(var(--B) * -0.115);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 46% 64%, rgba(255, 186, 96, .10) 0%, rgba(255, 186, 96, 0) 62%),
-    linear-gradient(180deg, rgba(255, 255, 255, .34) 0%, rgba(255, 255, 255, .10) 100%);
+    radial-gradient(circle at 44% 58%, rgba(255, 196, 110, .26) 0%, rgba(255, 210, 150, .10) 50%, rgba(255, 220, 170, 0) 66%),
+    linear-gradient(160deg, rgba(255, 255, 255, .10) 0%, rgba(255, 255, 255, .26) 100%);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, .75),
-    inset 0 -1px 2px rgba(0, 0, 0, .025),
-    0 0 0 1px rgba(0, 0, 0, .012),
-    0 24px 60px -18px rgba(70, 60, 40, .16);
+    inset 0 1px 0 rgba(255, 255, 255, .35),
+    inset 1px 2px 3px rgba(0, 0, 0, .025),
+    0 0 0 1px rgba(0, 0, 0, .018),
+    0 3px 10px rgba(0, 0, 0, .035);
   transition: box-shadow .4s ease;
 }
 
 /* ---------- Timer ring ---------- */
 .timer {
   position: absolute;
-  inset: calc(var(--B) * -0.085);
-  width: calc(var(--B) * 1.17);
-  height: calc(var(--B) * 1.17);
+  inset: calc(var(--B) * -0.07);
+  width: calc(var(--B) * 1.14);
+  height: calc(var(--B) * 1.14);
   transform: rotate(-90deg);
   overflow: visible;
   pointer-events: none;
@@ -107,15 +133,15 @@ body {
 .timer__track,
 .timer__bar {
   fill: none;
-  stroke-width: .4;
+  stroke-width: .38;
   stroke-linecap: round;
 }
-.timer__track { stroke: rgba(0, 0, 0, .035); }
+.timer__track { stroke: rgba(0, 0, 0, .03); }
 .timer__bar {
   stroke: var(--amber-lo);
   stroke-dasharray: 100 100;
   stroke-dashoffset: 0;
-  filter: drop-shadow(0 0 1.2px rgba(255, 150, 30, .6));
+  filter: drop-shadow(0 0 1.2px rgba(255, 150, 30, .55));
 }
 .timer.is-urgent .timer__bar { stroke: var(--bad-lo); filter: drop-shadow(0 0 1.2px rgba(240, 48, 42, .55)); }
 
@@ -139,36 +165,47 @@ body {
   border-radius: 50%;
 }
 
-/* Light leaking from underneath the disc, strongest at the bottom */
+/* Warm light leaking out from behind the disc: a thin bright crescent on the
+   left and bottom, plus a wide soft bloom onto the halo. */
 .push__glow {
-  transform: translate(-1px, calc(var(--B) * .016));
+  transform: translate(calc(var(--B) * -.005), calc(var(--B) * .017));
   transition:
     opacity .5s ease,
     box-shadow .5s ease,
     transform .4s var(--ease-release);
 }
 .push__glow--warm {
-  background: linear-gradient(180deg, var(--amber-hi) 0%, var(--amber) 55%, var(--amber-lo) 100%);
+  background: linear-gradient(200deg, var(--amber-hi) 0%, var(--amber) 50%, var(--amber-lo) 100%);
   box-shadow:
-    0 3px 8px rgba(255, 160, 40, .42),
-    0 10px 28px rgba(255, 170, 60, .22),
-    0 0 56px rgba(255, 190, 100, .12);
+    -1px 2px 3px rgba(255, 176, 50, .55),
+    -2px 5px calc(var(--B) * .045) rgba(255, 175, 60, .38),
+    0 calc(var(--B) * .03) calc(var(--B) * .13) rgba(255, 185, 90, .34),
+    0 calc(var(--B) * .02) calc(var(--B) * .24) rgba(255, 205, 140, .22);
 }
 .push__glow--good {
   opacity: 0;
-  background: linear-gradient(180deg, #d9ffe4 0%, var(--good) 55%, var(--good-lo) 100%);
-  box-shadow: 0 4px 12px rgba(67, 192, 112, .5), 0 14px 44px rgba(67, 192, 112, .38), 0 0 90px rgba(143, 227, 168, .35);
+  background: linear-gradient(200deg, #e2ffea 0%, var(--good) 50%, var(--good-lo) 100%);
+  box-shadow:
+    -1px 2px 3px rgba(67, 192, 112, .55),
+    -2px 5px calc(var(--B) * .045) rgba(67, 192, 112, .40),
+    0 calc(var(--B) * .02) calc(var(--B) * .13) rgba(120, 215, 150, .32),
+    0 0 calc(var(--B) * .22) rgba(143, 227, 168, .22);
 }
 .push__glow--bad {
   opacity: 0;
-  background: linear-gradient(180deg, #ffc2b8 0%, var(--bad) 55%, var(--bad-lo) 100%);
-  box-shadow: 0 4px 12px rgba(240, 48, 42, .55), 0 14px 44px rgba(240, 48, 42, .40), 0 0 100px rgba(255, 122, 107, .40);
+  background: linear-gradient(200deg, #ffc9c0 0%, var(--bad) 50%, var(--bad-lo) 100%);
+  box-shadow:
+    -1px 2px 3px rgba(240, 48, 42, .55),
+    -2px 5px calc(var(--B) * .045) rgba(240, 48, 42, .42),
+    0 calc(var(--B) * .02) calc(var(--B) * .13) rgba(255, 110, 95, .32),
+    0 0 calc(var(--B) * .22) rgba(255, 122, 107, .22);
 }
 
-/* Thin grey edge — the disc's physical thickness */
+/* The disc's grey thickness, seen at the lower right */
 .push__rim {
-  background: linear-gradient(170deg, var(--rim-hi) 0%, var(--rim-lo) 100%);
-  transform: translate(1px, calc(var(--B) * .009));
+  background: linear-gradient(150deg, var(--rim-hi) 30%, var(--rim-lo) 100%);
+  transform: translate(calc(var(--B) * .004), calc(var(--B) * .009));
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, .06);
   transition: transform .4s var(--ease-release);
 }
 
@@ -176,12 +213,11 @@ body {
   display: grid;
   place-items: center;
   background:
-    radial-gradient(120% 90% at 40% 22%, var(--face-hi) 0%, var(--face) 55%, var(--face-lo) 100%);
+    radial-gradient(110% 100% at 62% 18%, var(--face-hi) 0%, var(--face) 50%, var(--face-lo) 100%);
   box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, .95),
-    inset 0 -3px 6px rgba(0, 0, 0, .035),
-    0 1px 1px rgba(0, 0, 0, .06),
-    0 6px 14px rgba(0, 0, 0, .05);
+    inset -1px 2px 0 rgba(255, 255, 255, .95),
+    inset -2px 4px 5px rgba(255, 255, 255, .55),
+    inset 1px -2px 3px rgba(0, 0, 0, .03);
   transition:
     transform .42s var(--ease-release),
     box-shadow .42s var(--ease-release);
@@ -190,28 +226,28 @@ body {
 
 /* ---------- Pressed ---------- */
 .push.is-pressed .push__face {
-  transform: translateY(calc(var(--B) * .009)) scale(.986);
+  transform: translate(calc(var(--B) * .002), calc(var(--B) * .007)) scale(.988);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, .7),
-    inset 0 4px 10px rgba(0, 0, 0, .05),
-    0 0 1px rgba(0, 0, 0, .10),
-    0 1px 3px rgba(0, 0, 0, .04);
+    inset -1px 1px 0 rgba(255, 255, 255, .7),
+    inset 0 3px 8px rgba(0, 0, 0, .05),
+    inset 1px -1px 2px rgba(0, 0, 0, .02);
   transition-duration: .06s;
   transition-timing-function: var(--ease-press);
 }
 .push.is-pressed .push__rim {
-  transform: translate(.5px, calc(var(--B) * .006));
+  transform: translate(calc(var(--B) * .003), calc(var(--B) * .006));
   transition: transform .06s var(--ease-press);
 }
 .push.is-pressed .push__glow {
-  transform: translate(-1px, calc(var(--B) * .02)) scale(1.006);
+  transform: translate(calc(var(--B) * -.006), calc(var(--B) * .02)) scale(1.004);
   transition: opacity .06s ease, box-shadow .06s ease, transform .06s var(--ease-press);
 }
 .push.is-pressed .push__glow--warm {
   box-shadow:
-    0 4px 14px rgba(255, 160, 40, .65),
-    0 14px 48px rgba(255, 165, 50, .50),
-    0 0 110px rgba(255, 190, 100, .38);
+    -1px 2px 4px rgba(255, 176, 50, .75),
+    -2px 6px calc(var(--B) * .06) rgba(255, 170, 50, .55),
+    0 calc(var(--B) * .025) calc(var(--B) * .16) rgba(255, 180, 80, .40),
+    0 0 calc(var(--B) * .28) rgba(255, 200, 130, .28);
 }
 
 /* ---------- Feedback flashes ---------- */
@@ -242,28 +278,33 @@ body {
 .push__face > span { grid-area: 1 / 1; }
 
 .face__main {
-  font-weight: 200;
-  font-size: calc(var(--B) * .2);
-  letter-spacing: .14em;
-  padding-left: .14em; /* balance trailing tracking */
+  font-weight: 300;
+  font-size: calc(var(--B) * .175);
+  letter-spacing: .1em;
+  padding-left: .1em; /* balance trailing tracking */
   line-height: 1;
   white-space: nowrap;
   color: var(--ink);
+  /* letters lightly raised off the face, lit from the top right */
+  text-shadow:
+    -.5px 1px 1px rgba(0, 0, 0, .16),
+    -1px 2px 4px rgba(0, 0, 0, .07),
+    .5px -.5px 0 rgba(255, 255, 255, .7);
 }
 .face__main.is-command {
-  font-weight: 300;
-  font-size: calc(var(--B) * .105);
-  letter-spacing: .1em;
-  padding-left: .1em;
+  font-weight: 400;
+  font-size: calc(var(--B) * .088);
+  letter-spacing: .07em;
+  padding-left: .07em;
 }
 .face__main.is-big {
-  font-weight: 200;
+  font-weight: 300;
   font-size: calc(var(--B) * .3);
   letter-spacing: 0;
   padding-left: 0;
   font-variant-numeric: tabular-nums;
 }
-.face__main.is-danger { color: #c22a24; }
+.face__main.is-danger { color: #c0302a; }
 
 .face__top,
 .face__sub {
@@ -274,6 +315,7 @@ body {
   color: var(--ink-soft);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  text-shadow: -.5px .5px 1px rgba(0, 0, 0, .10), .5px -.5px 0 rgba(255, 255, 255, .6);
 }
 .face__top { align-self: start; margin-top: calc(var(--B) * .2); }
 .face__sub { align-self: end; margin-bottom: calc(var(--B) * .2); }

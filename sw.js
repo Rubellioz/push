@@ -1,5 +1,5 @@
 // Cache-first service worker: PUSH works fully offline once installed.
-const CACHE = 'push-v1';
+const CACHE = 'push-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -18,6 +18,9 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './fonts/montserrat-latin-300-normal.woff2',
+  './fonts/montserrat-latin-400-normal.woff2',
+  './fonts/montserrat-latin-500-normal.woff2',
 ];
 
 self.addEventListener('install', (e) => {
@@ -32,9 +35,18 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// Network first, so a new deploy shows up immediately; cache as offline fallback.
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request)),
+    fetch(e.request)
+      .then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request, { ignoreSearch: true })),
   );
 });
