@@ -1,17 +1,19 @@
-import { ButtonView } from './ui/button.js?v=4';
-import { Menus } from './ui/menus.js?v=4';
-import { SoundEngine } from './audio/sound.js?v=4';
-import { Haptics } from './core/haptics.js?v=4';
-import { InputController } from './core/input.js?v=4';
-import { Settings } from './core/settings.js?v=4';
-import { Score } from './game/score.js?v=4';
-import { Game } from './game/game.js?v=4';
+import { ButtonView } from './ui/button.js?v=5';
+import { Menus } from './ui/menus.js?v=5';
+import { SoundEngine } from './audio/sound.js?v=5';
+import { Haptics } from './core/haptics.js?v=5';
+import { InputController } from './core/input.js?v=5';
+import { Settings } from './core/settings.js?v=5';
+import { Score } from './game/score.js?v=5';
+import { Game } from './game/game.js?v=5';
+import { Leaderboard } from './game/leaderboard.js?v=5';
 
 const settings = new Settings();
 const view = new ButtonView(document);
 const sound = new SoundEngine();
 const haptics = new Haptics(document.getElementById('hapticLabel'));
 const score = new Score();
+const leaderboard = new Leaderboard();
 
 /* ---------- settings → engine ---------- */
 const themeMeta = document.querySelector('meta[name="theme-color"]');
@@ -45,6 +47,19 @@ const game = new Game({
   haptics,
   score,
   caption: document.getElementById('caption'),
+  onGameStart: () => leaderboard.start(),
+  onGameOver: async ({ points, rounds }) => {
+    const rank = await leaderboard.submit(points, rounds);
+    if (game.state !== 'over') return;
+    if (rank) {
+      view.setSub(`${rounds} ${rounds === 1 ? 'ROUND' : 'ROUNDS'}  ·  WORLD #${rank}`);
+    } else if (leaderboard.pending) {
+      // First ranked game without a name: ask for one once the result has sunk in.
+      setTimeout(() => {
+        if (game.state === 'over' && leaderboard.pending && !menus.open) menus.show('scores', { askName: true });
+      }, 1400);
+    }
+  },
   onState: (state) => {
     document.body.dataset.state = state;
     // (game itself isn't assigned yet on the first call from the constructor)
@@ -53,7 +68,7 @@ const game = new Game({
 });
 document.body.dataset.state = game.state;
 
-menus = new Menus({ settings, score, sound, haptics });
+menus = new Menus({ settings, score, leaderboard, sound, haptics });
 
 document.addEventListener('push:scores-cleared', () => {
   if (game.state === 'idle' || game.state === 'over') game.showIdle();
@@ -93,4 +108,4 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 }
 
 // Exposed for debugging in the console only.
-window.__push = { game, sound, score, settings, menus };
+window.__push = { game, sound, score, settings, menus, leaderboard };

@@ -1,6 +1,6 @@
-import { TimerGroup } from '../core/timers.js?v=4';
-import { CommandGenerator, gapFor } from './commands.js?v=4';
-import { createRound } from './rounds.js?v=4';
+import { TimerGroup } from '../core/timers.js?v=5';
+import { CommandGenerator, gapFor } from './commands.js?v=5';
+import { createRound } from './rounds.js?v=5';
 
 /**
  * Game — the state machine.
@@ -14,8 +14,10 @@ import { createRound } from './rounds.js?v=4';
 const RESTART_LOCK_MS = 1000;
 
 export class Game {
-  constructor({ view, sound, haptics, score, caption, onState }) {
+  constructor({ view, sound, haptics, score, caption, onState, onGameStart, onGameOver }) {
     this.onState = onState;
+    this.onGameStart = onGameStart;
+    this.onGameOver = onGameOver;
     this.view = view;
     this.sound = sound;
     this.haptics = haptics;
@@ -85,6 +87,7 @@ export class Game {
     this.state = 'intro';
     this.score.reset();
     this.commands.reset();
+    this.onGameStart?.();
     this.view.setDead(false);
     this.view.hideTimer();
     this.view.setDots(0);
@@ -137,6 +140,7 @@ export class Game {
   _gameOver() {
     this.state = 'over';
     this.score.commit();
+    this.onGameOver?.({ points: this.score.points, rounds: this.score.rounds });
     const { points, rounds, best, newBest } = this.score;
     this.view.hideTimer();
     this.view.show({

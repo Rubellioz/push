@@ -1,5 +1,5 @@
 // Cache-first service worker: PUSH works fully offline once installed.
-const CACHE = 'push-v4';
+const CACHE = 'push-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -17,6 +17,7 @@ const ASSETS = [
   './js/game/rounds.js',
   './js/game/game.js',
   './js/game/score.js',
+  './js/game/leaderboard.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
@@ -44,7 +45,8 @@ self.addEventListener('activate', (e) => {
 
 // Network first, so a new deploy shows up immediately; cache as offline fallback.
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
+  const url = new URL(e.request.url);
+  if (e.request.method !== 'GET' || url.origin !== location.origin || url.pathname.includes('/api/')) return;
   e.respondWith(
     fetch(e.request, { cache: 'no-cache' }) // always revalidate with the server
       .then((res) => {

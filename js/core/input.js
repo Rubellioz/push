@@ -46,14 +46,16 @@ export class InputController {
     document.addEventListener('touchend', () => this.onActivate?.(), opts);
 
     // Keyboard (desktop testing / accessibility): Space or Enter.
+    // Keys typed into a field or aimed at a menu control are not button presses.
+    const isForUi = (e) => !!e.target?.closest?.('input, textarea, select, .panel, .corner');
     window.addEventListener('keydown', (e) => {
-      if (e.repeat || (e.code !== 'Space' && e.code !== 'Enter')) return;
+      if (e.repeat || (e.code !== 'Space' && e.code !== 'Enter') || isForUi(e)) return;
       e.preventDefault();
       this.onActivate?.();
       this.onPress(e);
     });
     window.addEventListener('keyup', (e) => {
-      if (e.code !== 'Space' && e.code !== 'Enter') return;
+      if ((e.code !== 'Space' && e.code !== 'Enter') || isForUi(e)) return;
       e.preventDefault();
       this.onRelease(e);
     });
@@ -62,6 +64,9 @@ export class InputController {
     document.addEventListener('gesturestart', (e) => e.preventDefault(), opts);
     document.addEventListener('dblclick', (e) => e.preventDefault(), opts);
     document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('touchmove', (e) => e.preventDefault(), opts);
+    document.addEventListener('touchmove', (e) => {
+      if (e.target.closest?.('.panel')) return; // panels may scroll
+      e.preventDefault();
+    }, opts);
   }
 }

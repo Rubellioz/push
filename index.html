@@ -16,7 +16,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="preload" href="fonts/montserrat-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
   <main class="stage" id="stage">
@@ -57,8 +57,19 @@
   </button>
   <section class="panel panel--left" id="scoresPanel" aria-label="High scores" inert>
     <h2 class="panel__title">HIGH SCORES</h2>
+    <div class="tabs" role="tablist" aria-label="Ranking">
+      <button class="tab" type="button" role="tab" data-tab="world" aria-selected="true">WORLD</button>
+      <button class="tab" type="button" role="tab" data-tab="mine" aria-selected="false">YOU</button>
+    </div>
+    <form class="namebox" id="nameForm" hidden>
+      <label class="namebox__label" for="nameInput" id="nameLabel">ENTER YOUR NAME TO JOIN THE WORLD RANKING</label>
+      <div class="namebox__row">
+        <input class="field" id="nameInput" name="name" maxlength="16" placeholder="Your name" autocomplete="nickname" autocapitalize="words" enterkeyhint="done" spellcheck="false">
+        <button class="namebox__save" type="submit">SAVE</button>
+      </div>
+    </form>
     <ol class="scores" id="scoresList"></ol>
-    <p class="panel__empty" id="scoresEmpty">No scores yet.<br>Press PUSH to set one.</p>
+    <p class="panel__empty" id="scoresEmpty"></p>
   </section>
 
   <button class="corner corner--right" id="settingsBtn" type="button" aria-label="Settings" aria-expanded="false" aria-controls="settingsPanel">
@@ -71,6 +82,7 @@
   <section class="panel panel--right" id="settingsPanel" aria-label="Settings" inert>
     <h2 class="panel__title">SETTINGS</h2>
     <div class="opts">
+      <div class="opt"><label class="opt__label" for="settingsName">NAME</label><input class="field field--inline" id="settingsName" name="settingsName" maxlength="16" placeholder="Your name" autocomplete="nickname" autocapitalize="words" enterkeyhint="done" spellcheck="false"></div>
       <div class="opt"><span class="opt__label" id="lblSound">SOUND</span><button class="switch" type="button" role="switch" aria-labelledby="lblSound" data-setting="sound"><i></i></button></div>
       <div class="opt"><span class="opt__label" id="lblHaptics">VIBRATION</span><button class="switch" type="button" role="switch" aria-labelledby="lblHaptics" data-setting="haptics"><i></i></button></div>
       <div class="opt"><span class="opt__label" id="lblDark">DARK MODE</span><button class="switch" type="button" role="switch" aria-labelledby="lblDark" data-setting="dark"><i></i></button></div>
@@ -81,6 +93,6 @@
   <!-- iOS 18+ haptic tick: toggling a native switch triggers the Taptic Engine -->
   <label class="haptic" id="hapticLabel" aria-hidden="true"><input type="checkbox" switch tabindex="-1"></label>
 
-  <script type="module" src="js/main.js?v=4"></script>
+  <script type="module" src="js/main.js?v=5"></script>
 </body>
 </html>
