@@ -1,12 +1,12 @@
-import { ButtonView } from './ui/button.js?v=6';
-import { Menus } from './ui/menus.js?v=6';
-import { SoundEngine } from './audio/sound.js?v=6';
-import { Haptics } from './core/haptics.js?v=6';
-import { InputController } from './core/input.js?v=6';
-import { Settings } from './core/settings.js?v=6';
-import { Score } from './game/score.js?v=6';
-import { Game } from './game/game.js?v=6';
-import { Leaderboard } from './game/leaderboard.js?v=6';
+import { ButtonView } from './ui/button.js?v=7';
+import { Menus } from './ui/menus.js?v=7';
+import { SoundEngine } from './audio/sound.js?v=7';
+import { Haptics } from './core/haptics.js?v=7';
+import { InputController } from './core/input.js?v=7';
+import { Settings } from './core/settings.js?v=7';
+import { Score } from './game/score.js?v=7';
+import { Game } from './game/game.js?v=7';
+import { Leaderboard } from './game/leaderboard.js?v=7';
 
 const settings = new Settings();
 const view = new ButtonView(document);
@@ -39,6 +39,22 @@ settings.onChange((key) => {
   }
 });
 
+/* ---------- idle ambience ---------- */
+// After a few quiet seconds on the start or game-over screen, the glow
+// starts to drift and breathe. Any touch stops it.
+const IDLE_AFTER_MS = 3500;
+let idleTimer = 0;
+function armIdle(state) {
+  clearTimeout(idleTimer);
+  view.setIdle(false);
+  if (state === 'idle' || state === 'over') {
+    idleTimer = setTimeout(() => view.setIdle(true), IDLE_AFTER_MS);
+  }
+}
+document.addEventListener('pointerdown', () => {
+  if (game && (game.state === 'idle' || game.state === 'over')) armIdle(game.state);
+}, { capture: true, passive: true });
+
 /* ---------- game ---------- */
 let menus;
 const game = new Game({
@@ -62,6 +78,7 @@ const game = new Game({
   },
   onState: (state) => {
     document.body.dataset.state = state;
+    armIdle(state);
     // (game itself isn't assigned yet on the first call from the constructor)
     if (state === 'intro' || state === 'playing' || state === 'dying') menus?.close();
   },
@@ -78,6 +95,7 @@ new InputController(document.getElementById('push'), {
   onPress: (e) => {
     // Space/Enter on a focused menu control belongs to that control.
     if (e.type === 'keydown' && (menus.open || document.activeElement?.closest('.corner, .panel'))) return;
+    armIdle(game.state);
     game.press();
   },
   onRelease: () => game.release(),

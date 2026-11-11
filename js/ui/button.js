@@ -86,6 +86,37 @@ export class ButtonView {
     this.timer.classList.remove('is-on', 'is-urgent');
   }
 
+  /* ----- idle ambience ----- */
+  /**
+   * Slowly orbit and breathe the glow while nobody touches the button.
+   * Turning it off freezes the glow where it is and eases it home, so the
+   * light never jumps.
+   */
+  setIdle(on) {
+    const btn = this.button;
+    if (on === btn.classList.contains('is-idle')) return;
+    if (on) {
+      btn.classList.add('is-idle');
+      return;
+    }
+    const glows = [...btn.querySelectorAll('.push__glow--warm, .push__glow--bad')];
+    glows.forEach((g) => {
+      const cs = getComputedStyle(g);
+      g.style.transition = 'none';
+      g.style.transform = cs.transform;
+      g.style.opacity = cs.opacity;
+    });
+    btn.classList.remove('is-idle');
+    void btn.offsetWidth;
+    glows.forEach((g) => {
+      g.style.transition = 'transform .6s cubic-bezier(.2, .8, .3, 1), opacity .6s ease';
+      g.style.transform = '';
+      g.style.opacity = '';
+    });
+    clearTimeout(this._idleClear);
+    this._idleClear = setTimeout(() => glows.forEach((g) => { g.style.transition = ''; }), 650);
+  }
+
   /* ----- feedback ----- */
   flashGood() { this._replay(this.button, 'flash-good'); }
 

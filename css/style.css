@@ -313,6 +313,30 @@ body {
 .push.is-dead .push__glow--bad  { opacity: .55; }
 .push.is-dead .push__glow--warm { opacity: 0; }
 .push.pulse .push__glow--warm { animation: pulse .55s ease-out; }
+
+/* Idle ambience: the light behind the disc drifts around it and breathes. */
+.push.is-idle:not(.is-dead) .push__glow--warm {
+  animation:
+    glow-orbit 11s linear infinite,
+    glow-breathe 4.2s ease-in-out infinite;
+}
+.push.is-idle.is-dead .push__glow--bad {
+  animation:
+    glow-orbit 11s linear infinite,
+    glow-breathe-dim 4.2s ease-in-out infinite;
+}
+@keyframes glow-orbit {
+  from { transform: rotate(0deg)   translate(calc(var(--B) * -.005), calc(var(--B) * .017)); }
+  to   { transform: rotate(360deg) translate(calc(var(--B) * -.005), calc(var(--B) * .017)); }
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .38; }
+}
+@keyframes glow-breathe-dim {
+  0%, 100% { opacity: .55; }
+  50%      { opacity: .2; }
+}
 @keyframes pulse {
   0%   { filter: brightness(1); }
   15%  { filter: brightness(1.25) saturate(1.25); }
@@ -439,6 +463,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .device.shake { animation: none; }
+  .push.is-idle .push__glow { animation: none !important; }
   .enter { animation-duration: .01s; }
   .caption.is-hint,
 .face__sub.is-hint { animation: none; opacity: .8; }
