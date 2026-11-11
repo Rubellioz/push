@@ -1,5 +1,5 @@
 // Cache-first service worker: PUSH works fully offline once installed.
-const CACHE = 'push-v8';
+const CACHE = 'push-v9';
 const ASSETS = [
   './',
   './index.html',
@@ -22,6 +22,10 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './icons/icon-192-maskable.png',
+  './icons/icon-512-maskable.png',
+  './icons/favicon-32.png',
+  './favicon.ico',
   './fonts/montserrat-latin-300-normal.woff2',
   './fonts/montserrat-latin-400-normal.woff2',
   './fonts/montserrat-latin-500-normal.woff2',

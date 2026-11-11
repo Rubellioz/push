@@ -1,6 +1,6 @@
-import { TimerGroup } from '../core/timers.js?v=8';
-import { CommandGenerator, gapFor } from './commands.js?v=8';
-import { createRound } from './rounds.js?v=8';
+import { TimerGroup } from '../core/timers.js?v=9';
+import { CommandGenerator, gapFor } from './commands.js?v=9';
+import { createRound } from './rounds.js?v=9';
 
 /**
  * Game — the state machine.

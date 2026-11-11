@@ -1,13 +1,13 @@
-import { ButtonView } from './ui/button.js?v=8';
-import { Menus } from './ui/menus.js?v=8';
-import { SoundEngine } from './audio/sound.js?v=8';
-import { MusicEngine } from './audio/music.js?v=8';
-import { Haptics } from './core/haptics.js?v=8';
-import { InputController } from './core/input.js?v=8';
-import { Settings } from './core/settings.js?v=8';
-import { Score } from './game/score.js?v=8';
-import { Game } from './game/game.js?v=8';
-import { Leaderboard } from './game/leaderboard.js?v=8';
+import { ButtonView } from './ui/button.js?v=9';
+import { Menus } from './ui/menus.js?v=9';
+import { SoundEngine } from './audio/sound.js?v=9';
+import { MusicEngine } from './audio/music.js?v=9';
+import { Haptics } from './core/haptics.js?v=9';
+import { InputController } from './core/input.js?v=9';
+import { Settings } from './core/settings.js?v=9';
+import { Score } from './game/score.js?v=9';
+import { Game } from './game/game.js?v=9';
+import { Leaderboard } from './game/leaderboard.js?v=9';
 
 const settings = new Settings();
 const view = new ButtonView(document);

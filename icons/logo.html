@@ -1,0 +1,106 @@
+<!doctype html>
+<!-- Source for the app icon. Rendered to PNG by scripts/render-icons.js.
+     ?variant=maskable shrinks the artwork into Android's safe zone;
+     ?variant=dark renders the dark-mode look. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --S: 1024px;               /* canvas size */
+    --B: calc(var(--S) * .54); /* button diameter */
+    --wall-hi: #ecebe9;
+    --wall: #e1e0de;
+    --wall-lo: #cfcecc;
+    --face-hi: #f6f6f5;
+    --face: #eeeeed;
+    --face-lo: #e2e2e1;
+    --rim-hi: #cfcfcd;
+    --rim-lo: #a3a3a1;
+    --hl: rgba(255, 255, 255, 1);
+  }
+  :root.maskable { --B: calc(var(--S) * .44); }
+  :root.dark {
+    --wall-hi: #222220; --wall: #181817; --wall-lo: #0c0c0c;
+    --face-hi: #34342f; --face: #2a2a28; --face-lo: #212120;
+    --rim-hi: #3c3c39; --rim-lo: #070707;
+    --hl: rgba(255, 255, 255, .22);
+  }
+  html, body { margin: 0; width: var(--S); height: var(--S); overflow: hidden; }
+  body {
+    display: grid;
+    place-items: center;
+    background: radial-gradient(75% 75% at 50% 44%, var(--wall-hi) 0%, var(--wall) 55%, var(--wall-lo) 100%);
+  }
+  .device { position: relative; width: var(--B); height: var(--B); }
+  .device > * { position: absolute; border-radius: 50%; }
+
+  /* Wide warm bloom on the wall */
+  .bloom {
+    inset: calc(var(--B) * -.42);
+    background: radial-gradient(circle at 46% 58%,
+      rgba(255, 178, 70, .42) 0%, rgba(255, 190, 100, .22) 32%, rgba(255, 205, 140, 0) 62%);
+  }
+  /* Halo disc */
+  .halo {
+    inset: calc(var(--B) * -.19);
+    background:
+      radial-gradient(circle at 44% 60%, rgba(255, 190, 100, .34) 0%, rgba(255, 205, 140, .12) 52%, rgba(255, 220, 170, 0) 70%),
+      linear-gradient(160deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .32));
+    box-shadow:
+      inset 0 calc(var(--B) * .006) 0 rgba(255, 255, 255, .45),
+      0 0 0 calc(var(--B) * .004) rgba(0, 0, 0, .025),
+      0 calc(var(--B) * .03) calc(var(--B) * .09) rgba(0, 0, 0, .06);
+  }
+  :root.dark .halo {
+    background:
+      radial-gradient(circle at 44% 60%, rgba(255, 170, 60, .22) 0%, rgba(255, 170, 60, .06) 52%, rgba(255, 170, 60, 0) 70%),
+      linear-gradient(160deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .05));
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, .05), 0 0 0 2px rgba(255, 255, 255, .03);
+  }
+  /* The light leaking from behind the disc */
+  .glow {
+    inset: 0;
+    transform: translate(calc(var(--B) * -.012), calc(var(--B) * .03));
+    background: linear-gradient(200deg, #ffe39a 0%, #ffbf45 45%, #f7961a 100%);
+    box-shadow:
+      calc(var(--B) * -.004) calc(var(--B) * .008) calc(var(--B) * .012) rgba(255, 170, 40, .75),
+      calc(var(--B) * -.01) calc(var(--B) * .025) calc(var(--B) * .07) rgba(255, 165, 50, .6),
+      0 calc(var(--B) * .05) calc(var(--B) * .2) rgba(255, 180, 80, .45);
+  }
+  /* Disc thickness */
+  .rim {
+    inset: 0;
+    transform: translate(calc(var(--B) * .008), calc(var(--B) * .016));
+    background: linear-gradient(150deg, var(--rim-hi) 30%, var(--rim-lo) 100%);
+  }
+  /* Button face */
+  .face {
+    inset: 0;
+    background: radial-gradient(110% 100% at 62% 18%, var(--face-hi) 0%, var(--face) 50%, var(--face-lo) 100%);
+    box-shadow:
+      inset calc(var(--B) * -.006) calc(var(--B) * .011) 0 var(--hl),
+      inset calc(var(--B) * -.012) calc(var(--B) * .022) calc(var(--B) * .03) rgba(255, 255, 255, .4),
+      inset calc(var(--B) * .006) calc(var(--B) * -.012) calc(var(--B) * .02) rgba(0, 0, 0, .05);
+  }
+  :root.dark .face {
+    box-shadow:
+      inset calc(var(--B) * -.006) calc(var(--B) * .011) 0 var(--hl),
+      inset calc(var(--B) * .006) calc(var(--B) * -.012) calc(var(--B) * .02) rgba(0, 0, 0, .3);
+  }
+</style>
+</head>
+<body>
+  <div class="device">
+    <div class="bloom"></div>
+    <div class="halo"></div>
+    <div class="glow"></div>
+    <div class="rim"></div>
+    <div class="face"></div>
+  </div>
+  <script>
+    const v = new URLSearchParams(location.search).get('variant');
+    if (v) document.documentElement.classList.add(...v.split(','));
+  </script>
+</body>
+</html>
