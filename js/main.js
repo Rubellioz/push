@@ -1,16 +1,19 @@
-import { ButtonView } from './ui/button.js?v=7';
-import { Menus } from './ui/menus.js?v=7';
-import { SoundEngine } from './audio/sound.js?v=7';
-import { Haptics } from './core/haptics.js?v=7';
-import { InputController } from './core/input.js?v=7';
-import { Settings } from './core/settings.js?v=7';
-import { Score } from './game/score.js?v=7';
-import { Game } from './game/game.js?v=7';
-import { Leaderboard } from './game/leaderboard.js?v=7';
+import { ButtonView } from './ui/button.js?v=8';
+import { Menus } from './ui/menus.js?v=8';
+import { SoundEngine } from './audio/sound.js?v=8';
+import { MusicEngine } from './audio/music.js?v=8';
+import { Haptics } from './core/haptics.js?v=8';
+import { InputController } from './core/input.js?v=8';
+import { Settings } from './core/settings.js?v=8';
+import { Score } from './game/score.js?v=8';
+import { Game } from './game/game.js?v=8';
+import { Leaderboard } from './game/leaderboard.js?v=8';
 
 const settings = new Settings();
 const view = new ButtonView(document);
 const sound = new SoundEngine();
+const music = new MusicEngine(sound);
+let gameState = 'idle';
 const haptics = new Haptics(document.getElementById('hapticLabel'));
 const score = new Score();
 const leaderboard = new Leaderboard();
@@ -24,10 +27,17 @@ function applyTheme() {
   themeMeta?.setAttribute('content', dark ? '#171716' : '#e0e0df');
 }
 
+/** Waiting music: only on the start and game-over screens, with sound on. */
+function updateMusic() {
+  music.setTrack(settings.get('music'));
+  music.setWanted(settings.get('sound') && !document.hidden && (gameState === 'idle' || gameState === 'over'));
+}
+
 function applySettings() {
   sound.enabled = settings.get('sound');
   haptics.enabled = settings.get('haptics');
   applyTheme();
+  updateMusic();
 }
 applySettings();
 
@@ -78,6 +88,8 @@ const game = new Game({
   },
   onState: (state) => {
     document.body.dataset.state = state;
+    gameState = state;
+    updateMusic();
     armIdle(state);
     // (game itself isn't assigned yet on the first call from the constructor)
     if (state === 'intro' || state === 'playing' || state === 'dying') menus?.close();
@@ -99,11 +111,17 @@ new InputController(document.getElementById('push'), {
     game.press();
   },
   onRelease: () => game.release(),
-  onActivate: () => sound.unlock(),
+  onActivate: () => {
+    sound.unlock();
+    music.ensure();
+  },
 });
+
+document.addEventListener('push:activate', () => music.ensure());
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) game.interrupt();
+  updateMusic();
 });
 window.addEventListener('pagehide', () => game.interrupt());
 
@@ -126,4 +144,4 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 }
 
 // Exposed for debugging in the console only.
-window.__push = { game, sound, score, settings, menus, leaderboard };
+window.__push = { game, sound, music, score, settings, menus, leaderboard };

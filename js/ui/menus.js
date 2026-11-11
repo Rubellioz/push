@@ -52,6 +52,7 @@ export class Menus {
     this.settingsName = $('settingsName');
     this.clearBtn = $('clearScores');
     this.switches = [...document.querySelectorAll('.switch[data-setting]')];
+    this.chips = [...document.querySelectorAll('.chip[data-music]')];
 
     this._bind();
     this._syncSwitches();
@@ -105,6 +106,12 @@ export class Menus {
     this.switches.forEach((sw) => {
       onTap(sw, () => {
         this.settings.toggle(sw.dataset.setting);
+        this._feedback();
+      });
+    });
+    this.chips.forEach((chip) => {
+      onTap(chip, () => {
+        this.settings.set('music', chip.dataset.music);
         this._feedback();
       });
     });
@@ -221,6 +228,8 @@ export class Menus {
     this.switches.forEach((sw) => {
       sw.setAttribute('aria-checked', String(!!this.settings.get(sw.dataset.setting)));
     });
+    const music = this.settings.get('music');
+    this.chips.forEach((c) => c.setAttribute('aria-checked', String(c.dataset.music === music)));
   }
 
   _clearScores() {
@@ -249,6 +258,7 @@ export class Menus {
 
   _feedback() {
     this.sound.unlock();
+    document.dispatchEvent(new CustomEvent('push:activate'));
     this.sound.tick();
     this.haptics.tick();
   }

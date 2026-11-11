@@ -8,6 +8,7 @@ const DEFAULTS = {
   sound: true,
   haptics: true,
   dark: false,
+  music: 'off',   // 'off' | 'hum' | 'glass' | 'chimes' | 'pulse'
 };
 
 export class Settings {

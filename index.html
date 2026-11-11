@@ -16,7 +16,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="preload" href="fonts/montserrat-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
   <main class="stage" id="stage">
@@ -84,6 +84,15 @@
     <div class="opts">
       <div class="opt"><label class="opt__label" for="settingsName">NAME</label><input class="field field--inline" id="settingsName" name="settingsName" maxlength="16" placeholder="Your name" autocomplete="nickname" autocapitalize="words" enterkeyhint="done" spellcheck="false"></div>
       <div class="opt"><span class="opt__label" id="lblSound">SOUND</span><button class="switch" type="button" role="switch" aria-labelledby="lblSound" data-setting="sound"><i></i></button></div>
+      <div class="opt opt--stack"><span class="opt__label" id="lblMusic">MUSIC</span>
+        <div class="chips" role="radiogroup" aria-labelledby="lblMusic">
+          <button class="chip" type="button" role="radio" data-music="off">OFF</button>
+          <button class="chip" type="button" role="radio" data-music="hum">HUM</button>
+          <button class="chip" type="button" role="radio" data-music="glass">GLASS</button>
+          <button class="chip" type="button" role="radio" data-music="chimes">CHIMES</button>
+          <button class="chip" type="button" role="radio" data-music="pulse">PULSE</button>
+        </div>
+      </div>
       <div class="opt"><span class="opt__label" id="lblHaptics">VIBRATION</span><button class="switch" type="button" role="switch" aria-labelledby="lblHaptics" data-setting="haptics"><i></i></button></div>
       <div class="opt"><span class="opt__label" id="lblDark">DARK MODE</span><button class="switch" type="button" role="switch" aria-labelledby="lblDark" data-setting="dark"><i></i></button></div>
     </div>
@@ -93,6 +102,6 @@
   <!-- iOS 18+ haptic tick: toggling a native switch triggers the Taptic Engine -->
   <label class="haptic" id="hapticLabel" aria-hidden="true"><input type="checkbox" switch tabindex="-1"></label>
 
-  <script type="module" src="js/main.js?v=7"></script>
+  <script type="module" src="js/main.js?v=8"></script>
 </body>
 </html>
