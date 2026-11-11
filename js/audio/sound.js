@@ -144,6 +144,21 @@ export class SoundEngine {
     this._tone(out, t, { from: 320, to: 200, glide: 0.02, gain: 0.25, decay: 0.03 });
   }
 
+  /**
+   * Countdown beep: a clean, slightly bell-like tone.
+   * @param {boolean} go  true for the final, higher "go" beep
+   */
+  countdown(go = false) {
+    if (!this.ready) return;
+    const t = this.ctx.currentTime + 0.005;
+    const out = this._voice(go ? 0.32 : 0.26);
+    const f = go ? 1318.5 : 880;   // E6 for go, A5 for the count
+    const len = go ? 0.32 : 0.14;
+    this._tone(out, t, { from: f, gain: 0.7, attack: 0.004, decay: len });
+    this._tone(out, t, { from: f * 2, gain: 0.12, attack: 0.002, decay: len * 0.5 });
+    this._tone(out, t, { type: 'triangle', from: f / 2, gain: 0.18, attack: 0.004, decay: len * 0.6 });
+  }
+
   /** Small warm two-note confirmation, quiet enough to sit under the click. */
   success() {
     if (!this.ready) return;

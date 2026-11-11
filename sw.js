@@ -1,5 +1,5 @@
 // Cache-first service worker: PUSH works fully offline once installed.
-const CACHE = 'push-v5';
+const CACHE = 'push-v6';
 const ASSETS = [
   './',
   './index.html',

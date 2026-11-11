@@ -89,6 +89,9 @@ export class ButtonView {
   /* ----- feedback ----- */
   flashGood() { this._replay(this.button, 'flash-good'); }
 
+  /** Brief brightening of the warm glow (countdown ticks). */
+  pulse() { this._replay(this.button, 'pulse'); }
+
   flashBad() {
     this._replay(this.button, 'flash-bad');
     this._replay(this.device, 'shake');

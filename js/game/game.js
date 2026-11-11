@@ -1,6 +1,6 @@
-import { TimerGroup } from '../core/timers.js?v=5';
-import { CommandGenerator, gapFor } from './commands.js?v=5';
-import { createRound } from './rounds.js?v=5';
+import { TimerGroup } from '../core/timers.js?v=6';
+import { CommandGenerator, gapFor } from './commands.js?v=6';
+import { createRound } from './rounds.js?v=6';
 
 /**
  * Game — the state machine.
@@ -12,6 +12,9 @@ import { createRound } from './rounds.js?v=5';
  * change, so nothing from a previous game can ever fire into the next one.
  */
 const RESTART_LOCK_MS = 1000;
+const READY_MS = 700;        // how long READY shows before the count starts
+const COUNTDOWN_FROM = 3;
+const COUNT_STEP_MS = 650;   // per number
 
 export class Game {
   constructor({ view, sound, haptics, score, caption, onState, onGameStart, onGameOver }) {
@@ -93,7 +96,21 @@ export class Game {
     this.view.setDots(0);
     this.view.show({ main: 'READY', style: 'command' });
     this._caption('');
-    this.flow.after(850, () => this._nextRound());
+
+    // READY … 3 · 2 · 1 … first command. One beep per number, a higher one on "go".
+    let t = READY_MS;
+    for (let n = COUNTDOWN_FROM; n >= 1; n--) {
+      this.flow.after(t, () => {
+        this.view.show({ main: String(n), style: 'big' });
+        this.view.pulse();
+        this.sound.countdown(false);
+      });
+      t += COUNT_STEP_MS;
+    }
+    this.flow.after(t, () => {
+      this.sound.countdown(true);
+      this._nextRound();
+    });
   }
 
   _nextRound() {
